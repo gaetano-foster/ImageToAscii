@@ -136,7 +136,8 @@ PixelToAscii(pixel_t pixel)
 	int value = pixel.r + pixel.g + pixel.b;
 	double percent = (double)value / (double)MAX_VALUE;
 	
-	return pallete[85-(int)(percent * 85)];
+	return pallete[85-(int)(percent * 85)]; // 85 - (...) = light mode
+											//      (...) = dark mode
 }
 
 BOOL
@@ -165,6 +166,37 @@ ImageToAscii(image_t image,
 	}
 }
 
+BOOL
+ImageToScaledAscii(image_t image,
+				   ascii_t *ascii,
+				   INT32 width,
+				   INT32 height)
+{
+	ascii->height = height;
+	ascii->width = width + 1; // for \n
+	ascii->pixels = malloc(ascii->height * ascii->width * sizeof(char) + 1);
+
+	if (ascii->pixels) {
+		for (int y = 0; y < ascii->height; y++) {
+			for (int x = 0; x < ascii->width; x++) {
+				double px = (double)x/(double)width;
+				double py = (double)y/(double)height;
+
+				if (x < ascii->width - 1)
+					ascii->pixels[y*ascii->width+x] = PixelToAscii(image.pixels[(image.height-(int)(py*image.height))*image.width+(int)(px*image.width)]);
+				else 
+					ascii->pixels[y*ascii->width+x] = '\n';
+			}
+		}
+		ascii->pixels[ascii->height * ascii->width] = '\0';
+		return TRUE;
+	}
+	else {
+		fprintf(stderr, "Error: Failed to allocate characters.\n");
+		return FALSE;
+	}
+}
+
 int
 main(int argc,
 	 char **argv)
@@ -173,21 +205,83 @@ main(int argc,
 	ascii_t ascii;
 
 	if (argv[1] == NULL) {
-		fprintf(stderr, "Error: No file inputted.\n");
+		fprintf(stderr, "Syntax Error: No file inputted.\n");
 		return -1;
 	}
 
-	LoadBMP(&image, argv[1]);
-	ImageToAscii(image, &ascii);
+	if (argv[2] != NULL) {
+		BOOL scaled = TRUE;
 
-	FILE *fp;
-	fp = fopen("image.txt", "w");
+		for (int i = 0; i < strlen(argv[2]); i++) {
+			if (!isdigit(argv[2][i])) {
+				scaled = FALSE;
+				break;
+			}
+		}
 
-	fprintf(fp, "\n%s\n", ascii.pixels);
+		if (scaled) {
+			if (argv[3] != NULL) {
+				for (int i = 0; i < strlen(argv[3]); i++) {
+					if (!isdigit(argv[3][i])) {
+						scaled = FALSE;
+						break;
+					}
+				}
+				if (!scaled) {
+					printf("Syntax Error: Height not specified.\n");
+				}
+				else {
+					if (argv[4] != NULL) {
+						FILE *file;
+						file = fopen(argv[4], "w");
 
-	fclose(fp);
+						LoadBMP(&image, argv[1]);
+						ImageToScaledAscii(image, &ascii, (int)strtol(argv[2], (char**)NULL, 10), (int)strtol(argv[3], (char**)NULL, 10));
+						fprintf(file, "\n%s\n", ascii.pixels);
+						printf("Rendered image into file %s.\n", argv[4]);
+						fclose(file);
+					}
+					else {
+						FILE *file;
+						file = fopen("image.txt", "w");
 
-	free(image.pixels);
-	free(ascii.pixels);
+						LoadBMP(&image, argv[1]);
+						ImageToScaledAscii(image, &ascii, (int)strtol(argv[2], (char**)NULL, 10), (int)strtol(argv[3], (char**)NULL, 10));
+						fprintf(file, "\n%s\n", ascii.pixels);
+						printf("Rendered image into file image.txt.\n");
+						fclose(file);
+					}
+				}
+			}
+			else {
+				scaled = FALSE;
+				printf("Syntax Error: Height not specified.\n");
+			}
+		}
+		else {
+			FILE *file;
+			file = fopen(argv[2], "w");
+
+			LoadBMP(&image, argv[1]);
+			ImageToAscii(image, &ascii);
+			fprintf(file, "\n%s\n", ascii.pixels);
+			printf("Rendered image into file %s.\n", argv[2]);
+			fclose(file);
+		}
+	}
+	else {
+		FILE *file;
+		file = fopen("image.txt", "w");
+
+		LoadBMP(&image, argv[1]);
+		ImageToAscii(image, &ascii);
+		fprintf(file, "\n%s\n", ascii.pixels);
+		printf("Rendered image into file image.txt.\n");
+		fclose(file);
+	}
+
+	if (&image != NULL) free(image.pixels);
+	if (&ascii != NULL) free(ascii.pixels);
+
 	return 0;
 }
