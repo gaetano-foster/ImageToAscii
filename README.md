@@ -36,6 +36,7 @@ Your image is probably way too big.
 ## Strengths
 * The code is cross platform; I did use windows types as a stylistic choice, but it works the same when they are replaced with standard types (think BYTE -> uint8_t)
 * It is a single translation unit and very readable.
+* The output can be scaled to your liking. (Nearest neighbor (?))
 * 60% of the time, it works every time.
 * It looks pretty cool.
 
