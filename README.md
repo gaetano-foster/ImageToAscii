@@ -45,3 +45,7 @@ Your image is probably way too big.
 * No support for other file formats; only bitmaps.
 * No support for compressed bitmaps.
 * Bitmaps have to be 24 bit.
+
+## Demonstration
+
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/UyrCpCYaGeU/0.jpg)](https://www.youtube.com/watch?v=UyrCpCYaGeU)
