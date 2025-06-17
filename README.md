@@ -1,50 +1,46 @@
-# ImageToAscii
+**ImageToASCII**
 
-## Description
-A simple C program that converts a bitmap image to a text file with ASCII characters.
+---
 
-## Usage
-In the same directory as the executable, create a file called `image.txt`. Then, open a command line and run the program like so:
-```
-ImageToASCII.exe (path to bitmap)
-```
+**Description**
+ImageToASCII is a lightweight C utility that converts 24-bit uncompressed bitmap (.bmp) images into ASCII art representations, outputting the result as plain text.
 
-## Potential Mistakes
-If you get an error message that says:
-```
-Error: Invalid or corrupted file format.
-Size: (number)
-Compression: (number)
-Bit Depth: (number)
-```
-Check the size, compression, and bit depth. Size should be 124, Compression should be 0, and Bit Depth should be 24. If any of these numbers are wrong, your file is formatted wrong. Open it with a photo editing software that supports bitmap and make sure to save it as a 24-bit non-compressed bitmap.
+**Usage**
 
-If your error message says:
-```
-Error: Invalid or corrupted file format.
-// or
-Error: Pixel count incorrect. File is likely corrupted.
-```
-Your file is either not a bitmap file at all, or it is corrupted.
+1. Place an `image.txt` file in the same directory as the executable.
+2. Run the program with the following syntax:
 
-Finally, if your error message says:
-```
-Error: Failed to allocate (number) pixels.
-```
-Your image is probably way too big.
+   ```bash
+   ImageToASCII.exe <path_to_bitmap>
+   ```
 
-## Strengths
-* The code is cross platform; I did use windows types as a stylistic choice, but it works the same when they are replaced with standard types (think BYTE -> uint8_t)
-* It is a single translation unit and very readable.
-* The output can be scaled to your liking. (Nearest neighbor (?))
-* 60% of the time, it works every time.
-* It looks pretty cool.
+**Common Errors and Troubleshooting**
 
-## Limitations
-* Realistic images/photos tend to be pretty muddy, since you can really only take the value of the colors with ASCII art. This effect can be minimized if you increase the contrast of the pictures.
-* No support for other file formats; only bitmaps.
-* No support for compressed bitmaps.
-* Bitmaps have to be 24 bit.
+* **Invalid or corrupted file format:**
+  Ensure the image meets the following:
+
+  * Header Size: 124 bytes
+  * Compression: 0 (uncompressed)
+  * Bit Depth: 24
+
+* **Pixel count incorrect or file is not recognized:**
+  Confirm the input is a valid 24-bit bitmap file. Use an image editor to re-export it if needed.
+
+* **Failed to allocate pixels:**
+  The image may be too large for available memory.
+
+**Features**
+
+* Cross-platform compatible (Windows types easily replaceable with standard C types).
+* Single translation unit with clear and maintainable structure.
+* Adjustable output resolution.
+* Efficient nearest-neighbor scaling.
+
+**Limitations**
+
+* Only supports 24-bit uncompressed bitmap images.
+* No support for JPEG, PNG, or other formats.
+* Photo-realistic images can lose detail in ASCII rendering.
 
 ## Demonstration
 
