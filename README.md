@@ -1,11 +1,11 @@
-**ImageToASCII**
+# Image To ASCII
 
 ---
 
-**Description**
+## Description
 ImageToASCII is a lightweight C utility that converts 24-bit uncompressed bitmap (.bmp) images into ASCII art representations, outputting the result as plain text.
 
-**Usage**
+## Usage
 
 1. Place an `image.txt` file in the same directory as the executable.
 2. Run the program with the following syntax:
@@ -14,7 +14,7 @@ ImageToASCII is a lightweight C utility that converts 24-bit uncompressed bitmap
    ImageToASCII.exe <path_to_bitmap>
    ```
 
-**Common Errors and Troubleshooting**
+## Common Errors and Troubleshooting
 
 * **Invalid or corrupted file format:**
   Ensure the image meets the following:
@@ -29,14 +29,14 @@ ImageToASCII is a lightweight C utility that converts 24-bit uncompressed bitmap
 * **Failed to allocate pixels:**
   The image may be too large for available memory.
 
-**Features**
+## Features
 
 * Cross-platform compatible (Windows types easily replaceable with standard C types).
 * Single translation unit with clear and maintainable structure.
 * Adjustable output resolution.
 * Efficient nearest-neighbor scaling.
 
-**Limitations**
+## Limitations
 
 * Only supports 24-bit uncompressed bitmap images.
 * No support for JPEG, PNG, or other formats.
